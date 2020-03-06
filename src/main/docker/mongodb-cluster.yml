@@ -3,7 +3,7 @@ services:
   gateway-mongodb:
     image: mongo:4.0.16
     ports:
-      - '27017:27017'
+      - '27080:27017'
     command: mongos --configdb gateway-mongodb-config
   gateway-mongodb-node:
     build:
