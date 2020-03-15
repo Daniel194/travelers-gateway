@@ -1,0 +1,43 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "org.travelers.gateway",
+      "nativeLanguage": "en"
+    },
+    "jhipsterVersion": "6.7.1",
+    "applicationType": "gateway",
+    "baseName": "gateway",
+    "packageName": "org.travelers.gateway",
+    "packageFolder": "org/travelers/gateway",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "redis",
+    "enableHibernateCache": false,
+    "websocket": "spring-websocket",
+    "databaseType": "mongodb",
+    "devDatabaseType": "mongodb",
+    "prodDatabaseType": "mongodb",
+    "searchEngine": "elasticsearch",
+    "messageBroker": "kafka",
+    "serviceDiscoveryType": "eureka",
+    "buildTool": "gradle",
+    "enableSwaggerCodegen": true,
+    "jwtSecretKey": "M2Q4OTZhMzE4Yzk5NDE3NzA1N2FiMzdiNGZjYmJhMTNiNjE1NjNmNjRhOWExMzQ1YzMxZDcxZDliZDk4YTZiNmVmOTFhMWM0NjhiYzRlNDQzMmQ1Yzc2ZGU5ZDBhZDYyZDY0YTEwMzQyZTI0MjBmODE5Y2M4ZmZiZWYzMWMyMzY=",
+    "embeddableLaunchScript": false,
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "clientFramework": "react",
+    "clientTheme": "litera",
+    "clientThemeVariant": "primary",
+    "creationTimestamp": 1582057406115,
+    "testFrameworks": ["gatling", "cucumber", "protractor"],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": true,
+    "nativeLanguage": "en",
+    "languages": ["en", "fr"],
+    "blueprints": []
+  }
+}
