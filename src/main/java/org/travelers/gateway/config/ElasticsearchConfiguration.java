@@ -24,6 +24,7 @@ import org.springframework.data.elasticsearch.core.convert.MappingElasticsearchC
 import org.springframework.data.elasticsearch.core.mapping.SimpleElasticsearchPersistentEntity;
 import org.springframework.data.mapping.MappingException;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,6 +42,11 @@ public class ElasticsearchConfiguration {
     @Bean
     public EntityMapper getEntityMapper() {
         return new CustomEntityMapper(mapper);
+    }
+
+    @PostConstruct
+    void init() {
+        System.setProperty("es.set.netty.runtime.available.processors", "false");
     }
 
     @Bean
