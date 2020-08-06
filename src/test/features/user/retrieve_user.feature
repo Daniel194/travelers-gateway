@@ -1,6 +1,13 @@
-Feature: User management
+Feature: Retrieve current account
 
-    Scenario: Retrieve administrator user
-        When I search user 'admin'
-        Then the user is found
-        And his last name is 'Administrator'
+    Background:
+        Given user with the following attributes
+            | id  | login | email           |
+            | 400 | admin | admin@admin.com |
+
+        When user already exists
+
+    Scenario: Retrieve current account
+        When I want to see my 'admin' account
+        Then the account is found
+        And his email is 'admin@admin.com'

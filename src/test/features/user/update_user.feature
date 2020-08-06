@@ -2,9 +2,9 @@ Feature: Update user
 
     Background:
         Given user with the following attributes
-            | id  | login  | password | email           |
-            | 400 | other1 | aaaaaaaa | other@other.com |
-            | 500 | other2 | aaaaaaaa | exist@other.com |
+            | id  | login  | email           |
+            | 400 | other1 | other@other.com |
+            | 500 | other2 | exist@other.com |
 
         When user already exists
 
@@ -19,4 +19,3 @@ Feature: Update user
             | WITH ALL FIELDS     | SUCCESSFUL     | other1 | other1@other.com |
             | WITHOUT EMAIL       | FAIL           | other1 |                  |
             | WITH INVALID EMAIL  | FAIL           | other1 | invalid-email    |
-            | WITH EXISTING EMAIL | FAIL           | other1 | exist@other.com  |
