@@ -2,8 +2,8 @@ Feature: Create user
 
     Background:
         Given user with the following attributes
-            | id  | login | password | email           |
-            | 400 | other | aaaaaaaa | other@other.com |
+            | id  | login | email           |
+            | 400 | other | other@other.com |
 
         When user already exists
 
@@ -17,7 +17,5 @@ Feature: Create user
             | testCase            | expectedResult | login | email           |
             | WITH ALL FIELDS     | SUCCESSFUL     | test  | test@test.com   |
             | WITHOUT LOGIN       | FAIL           |       | test2@test.com  |
-            | WITH EXISTING LOGIN | FAIL           | other | test2@test.com  |
             | WITHOUT EMAIL       | FAIL           | test2 |                 |
             | WITH INVALID EMAIL  | FAIL           | test2 | invalid-email   |
-            | WITH EXISTING EMAIL | FAIL           | test2 | other@other.com |
