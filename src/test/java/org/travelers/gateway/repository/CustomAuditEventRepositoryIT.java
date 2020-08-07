@@ -25,9 +25,6 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.travelers.gateway.repository.CustomAuditEventRepository.EVENT_DATA_COLUMN_MAX_LENGTH;
 
-/**
- * Integration tests for {@link CustomAuditEventRepository}.
- */
 @SpringBootTest(classes = GatewayApp.class)
 @ExtendWith(RedisTestContainerExtension.class)
 public class CustomAuditEventRepositoryIT {

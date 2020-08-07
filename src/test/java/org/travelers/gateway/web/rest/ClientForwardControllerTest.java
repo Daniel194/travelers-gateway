@@ -14,9 +14,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/**
- * Unit tests for the {@link ClientForwardController} REST controller.
- */
 public class ClientForwardControllerTest {
 
     private MockMvc restMockMvc;

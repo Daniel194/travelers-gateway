@@ -15,9 +15,6 @@ import static org.travelers.gateway.gateway.responserewriting.SwaggerBasePathRew
 import static org.junit.jupiter.api.Assertions.*;
 import static springfox.documentation.swagger2.web.Swagger2Controller.DEFAULT_URL;
 
-/**
- * Tests {@link SwaggerBasePathRewritingFilter} class.
- */
 public class SwaggerBasePathRewritingFilterTest {
 
     private SwaggerBasePathRewritingFilter filter = new SwaggerBasePathRewritingFilter();
@@ -31,9 +28,6 @@ public class SwaggerBasePathRewritingFilterTest {
         assertTrue(filter.shouldFilter());
     }
 
-    /**
-     * Zuul DebugFilter can be triggered by "deug" parameter.
-     */
     @Test
     public void shouldFilter_on_default_swagger_url_with_param() {
 

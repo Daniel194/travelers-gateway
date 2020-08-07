@@ -31,9 +31,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * Service class for managing users.
- */
 @Service
 public class UserService {
 
@@ -67,7 +64,6 @@ public class UserService {
         log.debug("Activating user for activation key {}", key);
         return userRepository.findOneByActivationKey(key)
             .map(user -> {
-                // activate given user for the registration key.
                 user.setActivated(true);
                 user.setActivationKey(null);
                 userRepository.save(user);

@@ -20,11 +20,6 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
-/**
- * Service for sending emails.
- * <p>
- * We use the {@link Async} annotation to send emails asynchronously.
- */
 @Service
 public class MailService {
 
@@ -56,7 +51,6 @@ public class MailService {
         log.debug("Send email[multipart '{}' and html '{}'] to '{}' with subject '{}' and content={}",
             isMultipart, isHtml, to, subject, content);
 
-        // Prepare message using a Spring helper
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper message = new MimeMessageHelper(mimeMessage, isMultipart, StandardCharsets.UTF_8.name());

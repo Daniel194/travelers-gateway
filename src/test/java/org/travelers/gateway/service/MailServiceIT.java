@@ -39,9 +39,6 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-/**
- * Integration tests for {@link MailService}.
- */
 @SpringBootTest(classes = GatewayApp.class)
 @ExtendWith(RedisTestContainerExtension.class)
 public class MailServiceIT {
@@ -49,7 +46,6 @@ public class MailServiceIT {
     private static final String[] languages = {
         "en",
         "fr"
-        // jhipster-needle-i18n-language-constant - JHipster will add/remove languages in this array
     };
     private static final Pattern PATTERN_LOCALE_3 = Pattern.compile("([a-z]{2})-([a-zA-Z]{4})-([a-z]{2})");
     private static final Pattern PATTERN_LOCALE_2 = Pattern.compile("([a-z]{2})-([a-z]{2})");
