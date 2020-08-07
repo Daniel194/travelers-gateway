@@ -32,9 +32,6 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-/**
- * Integration tests for the {@link UserResource} REST controller.
- */
 @AutoConfigureMockMvc
 @WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 @SpringBootTest(classes = GatewayApp.class)
@@ -67,11 +64,6 @@ public class UserResourceIT {
     @Autowired
     private UserRepository userRepository;
 
-    /**
-     * This repository is mocked in the org.travelers.gateway.repository.search test package.
-     *
-     * @see org.travelers.gateway.repository.search.UserSearchRepositoryMockConfiguration
-     */
     @Autowired
     private UserSearchRepository mockUserSearchRepository;
 
@@ -92,12 +84,6 @@ public class UserResourceIT {
         cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).clear();
     }
 
-    /**
-     * Create a User.
-     *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which has a required relationship to the User entity.
-     */
     public static User createEntity() {
         User user = new User();
         user.setLogin(DEFAULT_LOGIN);
@@ -121,7 +107,6 @@ public class UserResourceIT {
     public void createUser() throws Exception {
         int databaseSizeBeforeCreate = userRepository.findAll().size();
 
-        // Create the User
         ManagedUserVM managedUserVM = new ManagedUserVM();
         managedUserVM.setLogin(DEFAULT_LOGIN);
         managedUserVM.setPassword(DEFAULT_PASSWORD);
@@ -138,7 +123,6 @@ public class UserResourceIT {
             .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
             .andExpect(status().isCreated());
 
-        // Validate the User in the database
         assertPersistedUsers(users -> {
             assertThat(users).hasSize(databaseSizeBeforeCreate + 1);
             User testUser = users.get(users.size() - 1);
@@ -167,19 +151,16 @@ public class UserResourceIT {
         managedUserVM.setLangKey(DEFAULT_LANGKEY);
         managedUserVM.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
 
-        // An entity with an existing ID cannot be created, so this API call must fail
         restUserMockMvc.perform(post("/api/users")
             .contentType(TestUtil.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
             .andExpect(status().isBadRequest());
 
-        // Validate the User in the database
         assertPersistedUsers(users -> assertThat(users).hasSize(databaseSizeBeforeCreate));
     }
 
     @Test
     public void createUserWithExistingLogin() throws Exception {
-        // Initialize the database
         userRepository.save(user);
         mockUserSearchRepository.save(user);
         int databaseSizeBeforeCreate = userRepository.findAll().size();
@@ -201,13 +182,11 @@ public class UserResourceIT {
             .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
             .andExpect(status().isBadRequest());
 
-        // Validate the User in the database
         assertPersistedUsers(users -> assertThat(users).hasSize(databaseSizeBeforeCreate));
     }
 
     @Test
     public void createUserWithExistingEmail() throws Exception {
-        // Initialize the database
         userRepository.save(user);
         mockUserSearchRepository.save(user);
         int databaseSizeBeforeCreate = userRepository.findAll().size();
@@ -223,23 +202,19 @@ public class UserResourceIT {
         managedUserVM.setLangKey(DEFAULT_LANGKEY);
         managedUserVM.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
 
-        // Create the User
         restUserMockMvc.perform(post("/api/users")
             .contentType(TestUtil.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
             .andExpect(status().isBadRequest());
 
-        // Validate the User in the database
         assertPersistedUsers(users -> assertThat(users).hasSize(databaseSizeBeforeCreate));
     }
 
     @Test
     public void getAllUsers() throws Exception {
-        // Initialize the database
         userRepository.save(user);
         mockUserSearchRepository.save(user);
 
-        // Get all the users
         restUserMockMvc.perform(get("/api/users")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -254,13 +229,11 @@ public class UserResourceIT {
 
     @Test
     public void getUser() throws Exception {
-        // Initialize the database
         userRepository.save(user);
         mockUserSearchRepository.save(user);
 
         assertThat(cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).get(user.getLogin())).isNull();
 
-        // Get the user
         restUserMockMvc.perform(get("/api/users/{login}", user.getLogin()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -282,12 +255,10 @@ public class UserResourceIT {
 
     @Test
     public void updateUser() throws Exception {
-        // Initialize the database
         userRepository.save(user);
         mockUserSearchRepository.save(user);
         int databaseSizeBeforeUpdate = userRepository.findAll().size();
 
-        // Update the user
         User updatedUser = userRepository.findById(user.getId()).get();
 
         ManagedUserVM managedUserVM = new ManagedUserVM();
@@ -311,7 +282,6 @@ public class UserResourceIT {
             .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
             .andExpect(status().isOk());
 
-        // Validate the User in the database
         assertPersistedUsers(users -> {
             assertThat(users).hasSize(databaseSizeBeforeUpdate);
             User testUser = users.get(users.size() - 1);
@@ -325,12 +295,10 @@ public class UserResourceIT {
 
     @Test
     public void updateUserLogin() throws Exception {
-        // Initialize the database
         userRepository.save(user);
         mockUserSearchRepository.save(user);
         int databaseSizeBeforeUpdate = userRepository.findAll().size();
 
-        // Update the user
         User updatedUser = userRepository.findById(user.getId()).get();
 
         ManagedUserVM managedUserVM = new ManagedUserVM();
@@ -354,7 +322,6 @@ public class UserResourceIT {
             .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
             .andExpect(status().isOk());
 
-        // Validate the User in the database
         assertPersistedUsers(users -> {
             assertThat(users).hasSize(databaseSizeBeforeUpdate);
             User testUser = users.get(users.size() - 1);
@@ -369,7 +336,6 @@ public class UserResourceIT {
 
     @Test
     public void updateUserExistingEmail() throws Exception {
-        // Initialize the database with 2 users
         userRepository.save(user);
         mockUserSearchRepository.save(user);
 
@@ -385,7 +351,6 @@ public class UserResourceIT {
         userRepository.save(anotherUser);
         mockUserSearchRepository.save(anotherUser);
 
-        // Update the user
         User updatedUser = userRepository.findById(user.getId()).get();
 
         ManagedUserVM managedUserVM = new ManagedUserVM();
@@ -412,7 +377,6 @@ public class UserResourceIT {
 
     @Test
     public void updateUserExistingLogin() throws Exception {
-        // Initialize the database
         userRepository.save(user);
         mockUserSearchRepository.save(user);
 
@@ -428,7 +392,6 @@ public class UserResourceIT {
         userRepository.save(anotherUser);
         mockUserSearchRepository.save(anotherUser);
 
-        // Update the user
         User updatedUser = userRepository.findById(user.getId()).get();
 
         ManagedUserVM managedUserVM = new ManagedUserVM();
@@ -455,19 +418,16 @@ public class UserResourceIT {
 
     @Test
     public void deleteUser() throws Exception {
-        // Initialize the database
         userRepository.save(user);
         mockUserSearchRepository.save(user);
         int databaseSizeBeforeDelete = userRepository.findAll().size();
 
-        // Delete the user
         restUserMockMvc.perform(delete("/api/users/{login}", user.getLogin())
             .accept(TestUtil.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         assertThat(cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).get(user.getLogin())).isNull();
 
-        // Validate the database is empty
         assertPersistedUsers(users -> assertThat(users).hasSize(databaseSizeBeforeDelete - 1));
     }
 

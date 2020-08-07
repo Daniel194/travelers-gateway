@@ -13,9 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.time.Instant;
 
-/**
- * Spring Data MongoDB repository for the {@link User} entity.
- */
+
 @Repository
 public interface UserRepository extends MongoRepository<User, String> {
 
