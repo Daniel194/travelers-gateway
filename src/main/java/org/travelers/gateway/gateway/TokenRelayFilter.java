@@ -14,7 +14,6 @@ public class TokenRelayFilter extends ZuulFilter {
         RequestContext ctx = RequestContext.getCurrentContext();
         @SuppressWarnings("unchecked")
         Set<String> headers = (Set<String>) ctx.get("ignoredHeaders");
-        // JWT tokens should be relayed to the resource servers
         headers.remove("authorization");
         return null;
     }

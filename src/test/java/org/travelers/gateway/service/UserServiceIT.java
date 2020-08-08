@@ -29,9 +29,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
-/**
- * Integration tests for {@link UserService}.
- */
 @SpringBootTest(classes = GatewayApp.class)
 @ExtendWith(RedisTestContainerExtension.class)
 public class UserServiceIT {
@@ -54,11 +51,6 @@ public class UserServiceIT {
     @Autowired
     private UserService userService;
 
-    /**
-     * This repository is mocked in the org.travelers.gateway.repository.search test package.
-     *
-     * @see org.travelers.gateway.repository.search.UserSearchRepositoryMockConfiguration
-     */
     @Autowired
     private UserSearchRepository mockUserSearchRepository;
 

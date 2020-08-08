@@ -1,6 +1,11 @@
 package org.travelers.gateway.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.travelers.gateway.config.Constants;
+import org.travelers.gateway.config.KafkaProperties;
 import org.travelers.gateway.domain.Authority;
 import org.travelers.gateway.domain.User;
 import org.travelers.gateway.repository.AuthorityRepository;
@@ -26,37 +31,39 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * Service class for managing users.
- */
 @Service
 public class UserService {
 
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
-
     private final PasswordEncoder passwordEncoder;
-
     private final UserSearchRepository userSearchRepository;
-
     private final AuthorityRepository authorityRepository;
-
     private final CacheManager cacheManager;
+    private final KafkaProperties kafkaProperties;
+    private final ObjectMapper objectMapper;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserSearchRepository userSearchRepository, AuthorityRepository authorityRepository, CacheManager cacheManager) {
+    public UserService(UserRepository userRepository,
+                       PasswordEncoder passwordEncoder,
+                       UserSearchRepository userSearchRepository,
+                       AuthorityRepository authorityRepository,
+                       CacheManager cacheManager,
+                       KafkaProperties kafkaProperties,
+                       ObjectMapper objectMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userSearchRepository = userSearchRepository;
         this.authorityRepository = authorityRepository;
         this.cacheManager = cacheManager;
+        this.kafkaProperties = kafkaProperties;
+        this.objectMapper = objectMapper;
     }
 
     public Optional<User> activateRegistration(String key) {
         log.debug("Activating user for activation key {}", key);
         return userRepository.findOneByActivationKey(key)
             .map(user -> {
-                // activate given user for the registration key.
                 user.setActivated(true);
                 user.setActivationKey(null);
                 userRepository.save(user);
@@ -109,7 +116,6 @@ public class UserService {
         User newUser = new User();
         String encryptedPassword = passwordEncoder.encode(password);
         newUser.setLogin(userDTO.getLogin().toLowerCase());
-        // new user gets initially a generated password
         newUser.setPassword(encryptedPassword);
         newUser.setFirstName(userDTO.getFirstName());
         newUser.setLastName(userDTO.getLastName());
@@ -118,9 +124,8 @@ public class UserService {
         }
         newUser.setImageUrl(userDTO.getImageUrl());
         newUser.setLangKey(userDTO.getLangKey());
-        // new user is not active
-        newUser.setActivated(false);
-        // new user gets registration key
+        newUser.setActivated(true);
+
         newUser.setActivationKey(RandomUtil.generateActivationKey());
         Set<Authority> authorities = new HashSet<>();
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
@@ -128,13 +133,16 @@ public class UserService {
         userRepository.save(newUser);
         userSearchRepository.save(newUser);
         this.clearUserCaches(newUser);
+
+        sendMessage(newUser, "create-new-user");
+
         log.debug("Created Information for User: {}", newUser);
         return newUser;
     }
 
     private boolean removeNonActivatedUser(User existingUser) {
         if (existingUser.getActivated()) {
-             return false;
+            return false;
         }
         userRepository.delete(existingUser);
         this.clearUserCaches(existingUser);
@@ -171,19 +179,13 @@ public class UserService {
         userRepository.save(user);
         userSearchRepository.save(user);
         this.clearUserCaches(user);
+
+        sendMessage(user, "create-new-user");
+
         log.debug("Created Information for User: {}", user);
         return user;
     }
 
-    /**
-     * Update basic information (first name, last name, email, language) for the current user.
-     *
-     * @param firstName first name of user.
-     * @param lastName  last name of user.
-     * @param email     email id of user.
-     * @param langKey   language key.
-     * @param imageUrl  image URL of user.
-     */
     public void updateUser(String firstName, String lastName, String email, String langKey, String imageUrl) {
         SecurityUtils.getCurrentUserLogin()
             .flatMap(userRepository::findOneByLogin)
@@ -198,16 +200,13 @@ public class UserService {
                 userRepository.save(user);
                 userSearchRepository.save(user);
                 this.clearUserCaches(user);
+
+                sendMessage(user, "update-user");
+
                 log.debug("Changed Information for User: {}", user);
             });
     }
 
-    /**
-     * Update all information for a specific user, and return the modified user.
-     *
-     * @param userDTO user to update.
-     * @return updated user.
-     */
     public Optional<UserDTO> updateUser(UserDTO userDTO) {
         return Optional.of(userRepository
             .findById(userDTO.getId()))
@@ -234,6 +233,9 @@ public class UserService {
                 userRepository.save(user);
                 userSearchRepository.save(user);
                 this.clearUserCaches(user);
+
+                sendMessage(user, "update-user");
+
                 log.debug("Changed Information for User: {}", user);
                 return user;
             })
@@ -245,6 +247,9 @@ public class UserService {
             userRepository.delete(user);
             userSearchRepository.delete(user);
             this.clearUserCaches(user);
+
+            sendMessage(user, "delete-user");
+
             log.debug("Deleted User: {}", user);
         });
     }
@@ -273,19 +278,10 @@ public class UserService {
         return userRepository.findOneByLogin(login);
     }
 
-    public Optional<User> getUserWithAuthorities(String id) {
-        return userRepository.findById(id);
-    }
-
     public Optional<User> getUserWithAuthorities() {
         return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneByLogin);
     }
 
-    /**
-     * Not activated users should be automatically deleted after 3 days.
-     * <p>
-     * This is scheduled to get fired everyday, at 01:00 (am).
-     */
     @Scheduled(cron = "0 0 1 * * ?")
     public void removeNotActivatedUsers() {
         userRepository
@@ -298,10 +294,6 @@ public class UserService {
             });
     }
 
-    /**
-     * Gets a list of all the authorities.
-     * @return a list of all the authorities.
-     */
     public List<String> getAuthorities() {
         return authorityRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
     }
@@ -313,4 +305,14 @@ public class UserService {
             Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE)).evict(user.getEmail());
         }
     }
+
+    private void sendMessage(User user, String channel) {
+        try {
+            KafkaProducer<String, String> producer = new KafkaProducer<>(kafkaProperties.getProducerProps());
+            producer.send(new ProducerRecord<>(channel, objectMapper.writeValueAsString(user)));
+        } catch (JsonProcessingException e) {
+            log.error("Problem to send message to the channel {}: {}", channel, e.getMessage());
+        }
+    }
+
 }

@@ -10,9 +10,6 @@ import java.time.Instant;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * A DTO representing a user, with his authorities.
- */
 public class UserDTO {
 
     private String id;
@@ -29,6 +26,7 @@ public class UserDTO {
     private String lastName;
 
     @Email
+    @NotBlank
     @Size(min = 5, max = 254)
     private String email;
 
