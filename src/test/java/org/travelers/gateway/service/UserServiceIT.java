@@ -51,11 +51,6 @@ public class UserServiceIT {
     @Autowired
     private UserService userService;
 
-    /**
-     * This repository is mocked in the org.travelers.gateway.repository.search test package.
-     *
-     * @see org.travelers.gateway.repository.search.UserSearchRepositoryMockConfiguration
-     */
     @Autowired
     private UserSearchRepository mockUserSearchRepository;
 
