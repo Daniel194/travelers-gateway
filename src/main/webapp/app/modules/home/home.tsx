@@ -1,14 +1,22 @@
 import './home.scss';
 
 import React from 'react';
-import { Translate } from 'react-jhipster';
-import { connect } from 'react-redux';
-import { Row, Col, Alert } from 'reactstrap';
+import {Translate} from 'react-jhipster';
+import {connect} from 'react-redux';
+import {Row, Col, Alert} from 'reactstrap';
+import {RouteComponentProps, Redirect} from 'react-router-dom';
 
-export type IHomeProp = StateProps;
+export interface IHomeProp extends StateProps, RouteComponentProps<{}> {
+}
 
 export const Home = (props: IHomeProp) => {
-  const { account } = props;
+  const {account, location} = props;
+
+  const {from} = (location.state as any) || {from: {pathname: '/login', search: location.search}};
+
+  if (!account || !account.login) {
+    return <Redirect to={from}/>;
+  }
 
   return (
     <Row>
@@ -16,21 +24,16 @@ export const Home = (props: IHomeProp) => {
         <h2>
           <Translate contentKey="home.title">Welcome to Travelers !</Translate>
         </h2>
-        {account && account.login ? (
-          <div>
-            <Alert color="success">
-              <Translate contentKey="home.logged.message" interpolate={{ username: account.login }}>
-                You are logged in as user {account.login}.
-              </Translate>
-            </Alert>
-          </div>
-        ) : (
-          <div>
-          </div>
-        )}
+        <div>
+          <Alert color="success">
+            <Translate contentKey="home.logged.message" interpolate={{username: account.login}}>
+              You are logged in as user {account.login}.
+            </Translate>
+          </Alert>
+        </div>
       </Col>
       <Col md="3" className="pad">
-        <span className="hipster rounded" />
+        <span className="hipster rounded"/>
       </Col>
     </Row>
   );
