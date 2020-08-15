@@ -5,6 +5,7 @@
       "firstname": "First Name",
       "firstname.placeholder": "Your first name",
       "lastname": "Last Name",
+      "imageUrl": "Image Url",
       "lastname.placeholder": "Your last name",
       "language": "Language",
       "button": "Save"
