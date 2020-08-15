@@ -1,6 +1,7 @@
 import './home.scss';
 
 import React, {useEffect} from 'react';
+import {useHistory} from 'react-router-dom';
 import {Translate} from 'react-jhipster';
 import {connect} from 'react-redux';
 import {Row, Col} from 'reactstrap';
@@ -26,31 +27,33 @@ export const Home = (props: IHomeProp) => {
     props.getCurrentPosts();
   }, []);
 
-  const postDetails = () => {
+  const history = useHistory();
 
+  const postDetails = (id) => {
+    history.push(`/account/post/${id}`);
   }
 
   return (
     <Row>
-      <Col md="9">
+      <Col md="12">
         <h2>
           <Translate contentKey="home.title">Welcome to Travelers !</Translate>
         </h2>
-        <div>
-          {posts.map((post, i) => (
-            <Card key={post.id} style={{width: '18rem'}}>
-              <Card.Img variant="top" src={post.coverImageUrl}/>
-              <Card.Body>
-                <Card.Title>{post.title}</Card.Title>
-                <Card.Text>
-                  {post.description}
-                </Card.Text>
-                <Button variant="primary" onClick={postDetails()}>See details</Button>
-              </Card.Body>
-            </Card>
-          ))}
-        </div>
       </Col>
+      {posts.map((post, i) => (
+        <Col md="3" key={post.id}>
+          <Card style={{width: '18rem'}}>
+            <Card.Img variant="top" src={post.coverImageUrl}/>
+            <Card.Body>
+              <Card.Title>{post.title}</Card.Title>
+              <Card.Text>
+                {post.description}
+              </Card.Text>
+              <Button variant="primary" onClick={() => postDetails(post.id)}>See details</Button>
+            </Card.Body>
+          </Card>
+        </Col>
+      ))}
       <Col md="3" className="pad">
         <span className="hipster rounded"/>
       </Col>

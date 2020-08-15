@@ -110,8 +110,12 @@ export const updatePost = (post: IPost) => async dispatch => {
 };
 
 export const deletePost = id => async dispatch => {
-  await dispatch({
+  const result = await dispatch({
     type: ACTION_TYPES.DELETE_POST,
     payload: axios.delete(`${apiUrl}/${id}`)
   });
+
+  dispatch(getCurrentPosts());
+
+  return result;
 };
