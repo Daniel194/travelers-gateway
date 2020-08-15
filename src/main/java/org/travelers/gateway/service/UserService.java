@@ -310,6 +310,8 @@ public class UserService {
         try {
             KafkaProducer<String, String> producer = new KafkaProducer<>(kafkaProperties.getProducerProps());
             producer.send(new ProducerRecord<>(channel, objectMapper.writeValueAsString(user)));
+
+            log.info("A message was send successfully to {} channel", channel);
         } catch (JsonProcessingException e) {
             log.error("Problem to send message to the channel {}: {}", channel, e.getMessage());
         }

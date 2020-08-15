@@ -12,6 +12,7 @@
       "account": {
         "main": "Account",
         "settings": "Settings",
+        "details": "Details",
         "password": "Password",
         "sessions": "Sessions",
         "login": "Sign in",
