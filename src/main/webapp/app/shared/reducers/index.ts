@@ -12,6 +12,7 @@ import activate, { ActivateState } from 'app/modules/account/activate/activate.r
 import password, { PasswordState } from 'app/modules/account/password/password.reducer';
 import settings, { SettingsState } from 'app/modules/account/settings/settings.reducer';
 import passwordReset, { PasswordResetState } from 'app/modules/account/password-reset/password-reset.reducer';
+import details, { DetailsState } from 'app/modules/account/details/details.reducer';
 
 export interface IRootState {
   readonly authentication: AuthenticationState;
@@ -19,6 +20,7 @@ export interface IRootState {
   readonly applicationProfile: ApplicationProfileState;
   readonly administration: AdministrationState;
   readonly userManagement: UserManagementState;
+  readonly details: DetailsState;
   readonly register: RegisterState;
   readonly activate: ActivateState;
   readonly passwordReset: PasswordResetState;
@@ -33,6 +35,7 @@ const rootReducer = combineReducers<IRootState>({
   applicationProfile,
   administration,
   userManagement,
+  details,
   register,
   activate,
   passwordReset,

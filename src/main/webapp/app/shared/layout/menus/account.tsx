@@ -8,6 +8,9 @@ const accountMenuItemsAuthenticated = (
     <MenuItem icon="wrench" to="/account/settings">
       <Translate contentKey="global.menu.account.settings">Settings</Translate>
     </MenuItem>
+    <MenuItem icon="wrench" to="/account/details">
+      <Translate contentKey="global.menu.account.details">Details</Translate>
+    </MenuItem>
     <MenuItem icon="lock" to="/account/password">
       <Translate contentKey="global.menu.account.password">Password</Translate>
     </MenuItem>

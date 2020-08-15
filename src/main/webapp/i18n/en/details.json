@@ -1,0 +1,18 @@
+{
+  "details": {
+    "title": "User details for [<strong>{{username}}</strong>]",
+    "form": {
+      "firstname": "First Name",
+      "description": "Description",
+      "dateOfBirth": "Date Of Birth",
+      "placeOfBirth": "Place Of Birth",
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "youTube": "You Tube",
+      "button": "Save"
+    },
+    "messages": {
+      "success": "<strong>Details saved!</strong>"
+    }
+  }
+}
