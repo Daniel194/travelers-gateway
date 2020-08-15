@@ -6,6 +6,7 @@ import Settings from './settings/settings';
 import Password from './password/password';
 import Details from './details/details';
 import PostCreate from './post/post-create';
+import PostDetails from './post/post-details';
 
 const Routes = ({match}) => (
   <div>
@@ -13,6 +14,7 @@ const Routes = ({match}) => (
     <ErrorBoundaryRoute path={`${match.url}/password`} component={Password}/>
     <ErrorBoundaryRoute path={`${match.url}/details`} component={Details}/>
     <ErrorBoundaryRoute path={`${match.url}/create-post`} component={PostCreate}/>
+    <ErrorBoundaryRoute path={`${match.url}/post/:id`} component={PostDetails}/>
   </div>
 );
 
