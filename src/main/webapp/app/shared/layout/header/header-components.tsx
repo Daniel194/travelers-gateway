@@ -44,3 +44,14 @@ export const CreateProb = props => (
     </NavLink>
   </NavItem>
 );
+
+export const SearchProb = props => (
+  <NavItem>
+    <NavLink tag={Link} to="/account/search-post" className="d-flex align-items-center">
+      <FontAwesomeIcon icon="eye"/>
+      <span>
+        Search Post
+      </span>
+    </NavLink>
+  </NavItem>
+);

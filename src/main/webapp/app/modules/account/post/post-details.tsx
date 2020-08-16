@@ -16,7 +16,9 @@ export const PostDetailsPage = (props: IPostDetailsProps) => {
   const {post} = props;
   const history = useHistory();
 
-  useEffect(() => () => props.getPostById(id), []);
+  useEffect(() => {
+    props.getPostById(id)
+  }, []);
 
   const handleValidSubmit = (event, values) => {
     values.login = props.account.login;
