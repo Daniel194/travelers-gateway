@@ -57,6 +57,13 @@ export const getUserDetails = () => {
   };
 };
 
+export const getUserDetailsByLogin = (login: string) => {
+  return {
+    type: ACTION_TYPES.GET_DETAILS,
+    payload: axios.get<IUserDetails>(`${apiUrl}/${login}`)
+  };
+};
+
 export const saveUserDetails = (userDetails: IUserDetails) => async dispatch => {
   await dispatch({
     type: ACTION_TYPES.SAVE_DETAILS,
