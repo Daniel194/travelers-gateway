@@ -4,11 +4,13 @@ import { FAILURE, REQUEST, SUCCESS } from 'app/shared/reducers/action-type.util'
 import { defaultValue, IPost } from 'app/shared/model/post.model';
 
 export const ACTION_TYPES = {
-  GET_POST: 'details/GET_POST',
-  GET_POSTS: 'details/GET_POSTS',
-  SAVE_POST: 'details/SAVE_POST',
-  UPDATE_POST: 'details/UPDATE_POST',
-  DELETE_POST: 'details/DELETE_POST'
+  GET_POST: 'posts/GET_POST',
+  GET_POSTS: 'posts/GET_POSTS',
+  SEARCH_POSTS: 'posts/SEARCH_POSTS',
+  RESET_POSTS: 'posts/RESET_POSTS',
+  SAVE_POST: 'posts/SAVE_POST',
+  UPDATE_POST: 'posts/UPDATE_POST',
+  DELETE_POST: 'posts/DELETE_POST'
 };
 
 const initialState = {
@@ -27,6 +29,7 @@ export default (state: PostState = initialState, action): PostState => {
     case REQUEST(ACTION_TYPES.SAVE_POST):
     case REQUEST(ACTION_TYPES.UPDATE_POST):
     case REQUEST(ACTION_TYPES.DELETE_POST):
+    case REQUEST(ACTION_TYPES.SEARCH_POSTS):
       return {
         ...state,
         errorMessage: null,
@@ -37,6 +40,7 @@ export default (state: PostState = initialState, action): PostState => {
     case FAILURE(ACTION_TYPES.SAVE_POST):
     case FAILURE(ACTION_TYPES.UPDATE_POST):
     case FAILURE(ACTION_TYPES.DELETE_POST):
+    case FAILURE(ACTION_TYPES.SEARCH_POSTS):
       return {
         ...state,
         loading: false,
@@ -49,6 +53,7 @@ export default (state: PostState = initialState, action): PostState => {
         post: action.payload.data
       };
     case SUCCESS(ACTION_TYPES.GET_POSTS):
+    case SUCCESS(ACTION_TYPES.SEARCH_POSTS):
       return {
         ...state,
         loading: false,
@@ -60,6 +65,12 @@ export default (state: PostState = initialState, action): PostState => {
       return {
         ...state,
         loading: false
+      };
+    case SUCCESS(ACTION_TYPES.RESET_POSTS):
+      return {
+        ...state,
+        loading: false,
+        posts: []
       };
     default:
       return state;
@@ -75,12 +86,23 @@ export const getCurrentPosts = () => {
   };
 };
 
+export const searchPost = query => {
+  return {
+    type: ACTION_TYPES.SEARCH_POSTS,
+    payload: axios.get<IPost[]>(`${apiUrl}/_search/posts/${query}`)
+  };
+};
+
 export const getPostByLogin = login => {
   return {
     type: ACTION_TYPES.GET_POSTS,
     payload: axios.get<IPost[]>(`${apiUrl}/login/${login}`)
   };
 };
+
+export const resetPosts = () => ({
+  type: ACTION_TYPES.RESET_POSTS
+});
 
 export const getPostById = id => {
   return {
