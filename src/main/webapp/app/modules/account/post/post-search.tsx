@@ -1,44 +1,54 @@
-import './home.scss';
-
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
-import {Translate} from 'react-jhipster';
 import {connect} from 'react-redux';
 import {Row, Col} from 'reactstrap';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
-import {RouteComponentProps, Redirect} from 'react-router-dom';
+import {RouteComponentProps} from 'react-router-dom';
 import {IRootState} from "app/shared/reducers";
-import {getCurrentPosts} from "app/modules/account/post/post.reducer";
+import {resetPosts, searchPost} from "app/modules/account/post/post.reducer";
+import {AvField, AvForm} from 'availity-reactstrap-validation';
+import {translate} from 'react-jhipster';
 
-export interface IHomeProp extends StateProps, DispatchProps, RouteComponentProps<{}> {
+export interface IPostSearchProp extends StateProps, DispatchProps, RouteComponentProps<{}> {
 }
 
-export const Home = (props: IHomeProp) => {
-  const {account, location, posts} = props;
-
-  const {from} = (location.state as any) || {from: {pathname: '/login', search: location.search}};
-
-  if (!account || !account.login) {
-    return <Redirect to={from}/>;
-  }
-
-  useEffect(() => {
-    props.getCurrentPosts();
-  }, []);
-
+export const PostSearch = (props: IPostSearchProp) => {
+  const {posts} = props;
+  const [country, setCountry] = useState('');
   const history = useHistory();
 
+  useEffect(() => {
+    props.resetPosts();
+  }, []);
+
+  const searchCountry = () => {
+    props.searchPost("country=" + country)
+  }
+
   const postDetails = (id) => {
-    history.push(`/account/post/${id}`);
+    history.push(`/account/information-post/${id}`);
   }
 
   return (
     <Row>
       <Col md="12">
         <h2>
-          <Translate contentKey="home.title">Welcome to Travelers !</Translate>
+          Search Posts
         </h2>
+        <AvForm>
+          <AvField
+            className="form-control"
+            name="country"
+            label={translate('post.form.country')}
+            id="country"
+            placeholder={translate('post.form.country')}
+            value={country}
+            onInput={e => setCountry(e.target.value)}
+          />
+          <Button color="primary" onClick={() => searchCountry()}> Search </Button>
+        </AvForm>
+        <br/>
       </Col>
       {posts.map((post, i) => (
         <Col md="3" key={post.id}>
@@ -67,9 +77,9 @@ const mapStateToProps = ({post, authentication}: IRootState) => ({
   posts: post.posts
 });
 
-const mapDispatchToProps = {getCurrentPosts}
+const mapDispatchToProps = {resetPosts, searchPost}
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(PostSearch);

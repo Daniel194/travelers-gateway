@@ -1,0 +1,19 @@
+{
+  "post": {
+    "title": "Posts",
+    "form": {
+      "country": "Country",
+      "coverImageUrl": "Cover Image Url",
+      "title": "Title",
+      "description": "Description",
+      "endDate": "End Date",
+      "startDate": "Start Date",
+      "login": "Login",
+      "rating": "Rating",
+      "button": "Save"
+    },
+    "messages": {
+      "success": "<strong>Post saved!</strong>"
+    }
+  }
+}

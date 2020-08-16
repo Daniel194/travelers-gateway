@@ -12,7 +12,9 @@ import activate, { ActivateState } from 'app/modules/account/activate/activate.r
 import password, { PasswordState } from 'app/modules/account/password/password.reducer';
 import settings, { SettingsState } from 'app/modules/account/settings/settings.reducer';
 import passwordReset, { PasswordResetState } from 'app/modules/account/password-reset/password-reset.reducer';
-/* jhipster-needle-add-reducer-import - JHipster will add reducer here */
+import details, { DetailsState } from 'app/modules/account/details/details.reducer';
+import post, { PostState } from 'app/modules/account/post/post.reducer';
+import statistics, { StatisticsState } from 'app/modules/administration/statistics/statistics.reducer';
 
 export interface IRootState {
   readonly authentication: AuthenticationState;
@@ -20,12 +22,14 @@ export interface IRootState {
   readonly applicationProfile: ApplicationProfileState;
   readonly administration: AdministrationState;
   readonly userManagement: UserManagementState;
+  readonly details: DetailsState;
+  readonly post: PostState;
+  readonly statistics: StatisticsState;
   readonly register: RegisterState;
   readonly activate: ActivateState;
   readonly passwordReset: PasswordResetState;
   readonly password: PasswordState;
   readonly settings: SettingsState;
-  /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
 
@@ -35,12 +39,14 @@ const rootReducer = combineReducers<IRootState>({
   applicationProfile,
   administration,
   userManagement,
+  details,
+  post,
+  statistics,
   register,
   activate,
   passwordReset,
   password,
   settings,
-  /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar
 });
 
