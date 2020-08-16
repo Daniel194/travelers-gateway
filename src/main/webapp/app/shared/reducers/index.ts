@@ -14,6 +14,7 @@ import settings, { SettingsState } from 'app/modules/account/settings/settings.r
 import passwordReset, { PasswordResetState } from 'app/modules/account/password-reset/password-reset.reducer';
 import details, { DetailsState } from 'app/modules/account/details/details.reducer';
 import post, { PostState } from 'app/modules/account/post/post.reducer';
+import statistics, { StatisticsState } from 'app/modules/administration/statistics/statistics.reducer';
 
 export interface IRootState {
   readonly authentication: AuthenticationState;
@@ -23,6 +24,7 @@ export interface IRootState {
   readonly userManagement: UserManagementState;
   readonly details: DetailsState;
   readonly post: PostState;
+  readonly statistics: StatisticsState;
   readonly register: RegisterState;
   readonly activate: ActivateState;
   readonly passwordReset: PasswordResetState;
@@ -39,6 +41,7 @@ const rootReducer = combineReducers<IRootState>({
   userManagement,
   details,
   post,
+  statistics,
   register,
   activate,
   passwordReset,
