@@ -38,7 +38,7 @@ export const PostDetailsPage = (props: IPostDetailsProps) => {
       <Row className="justify-content-center">
         <Col md="8">
           <h2>
-            Create new post
+            Post
           </h2>
           <AvForm onValidSubmit={handleValidSubmit}>
             <AvField

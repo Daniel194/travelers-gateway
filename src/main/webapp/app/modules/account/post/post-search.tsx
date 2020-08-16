@@ -27,7 +27,7 @@ export const PostSearch = (props: IPostSearchProp) => {
   }
 
   const postDetails = (id) => {
-    history.push(`/account/post/information/${id}`);
+    history.push(`/account/information-post/${id}`);
   }
 
   return (
